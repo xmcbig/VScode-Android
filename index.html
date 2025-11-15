@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tutorial — VS Code Server on Android</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #121212;
+      --bg-secondary: #1e1e1e;
+      --bg-card: #1f1f1f;
+      --text-primary: #e0e0e0;
+      --text-secondary: #b0b0b0;
+      --accent: #03a9f4;
+      --step-bg: #1a2a3a;
+      --code-border: #03a9f4;
+      --copy-btn-bg: #03a9f4;
+      --shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      padding: 32px;
+      position: relative;
+    }
+
+    /* Top help banner */
+    .help-banner {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow);
+      font-size: 14px;
+      z-index: 1000;
+      animation: slidePop 1s ease-out forwards;
+    }
+
+    @keyframes slidePop {
+      0% { transform: translateX(-300px) scale(0.5); opacity:0; }
+      60% { transform: translateX(20px) scale(1.1); opacity:1; }
+      80% { transform: translateX(-5px) scale(0.95); }
+      100% { transform: translateX(0) scale(1); }
+    }
+
+    .help-banner a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .help-banner img {
+      width: 20px;
+      height: 20px;
+      margin-right: 4px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      margin-top: 0;
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .step {
+      margin-bottom: 24px;
+    }
+
+    /* Highlight tutorial titles in subtle blue */
+    .step h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-family: 'Poppins', sans-serif;
+      background: var(--step-bg);
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .code-block {
+      position: relative;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      border: 1px solid var(--code-border);
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(3, 169, 244, 0.4);
+      background: #1a1a1a;
+    }
+
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: var(--text-primary);
+    }
+
+    code {
+      font-family: monospace;
+      color: var(--text-primary);
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--copy-btn-bg);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #0288d1;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .support {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .support h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      transition: all 0.25s ease;
+    }
+
+    .social-links a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(3,169,244,0.5);
+      background: #0288d1;
+    }
+
+    .social-links img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .termux-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+    }
+
+    .termux-section .prompt {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--accent);
+    }
+
+    .termux-section a {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: #fff;
+      text-decoration: none;
+      background: #2a2a3a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .termux-section a:hover {
+      text-decoration: underline;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="help-banner">
+    If y'all need any help about this, message me on
+    <a href="https://t.me/KevyXion" target="_blank" rel="noopener noreferrer">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">Telegram
+    </a>
+  </div>
+
+  <div class="container">
+    <!-- Termux instructions -->
+    <div class="termux-section">
+      <div class="prompt">&gt;_</div>
+      <div>
+        <a href="https://f-droid.org/repo/com.termux_1002.apk" target="_blank"><strong>Termux</strong></a>
+        <p>Download Termux from the link above. Open it and run:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>pkg update && pkg upgrade -y</code></pre>
+        </div>
+        <p>Whenever it prompts y/n, type <code>y</code> and press enter. Wait until it finishes.</p>
+        <p>Give storage permission:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>termux-setup-storage</code></pre>
+        </div>
+        <p>Install Proot-Distro:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>pkg install proot-distro -y</code></pre>
+        </div>
+        <p>After installation, install Ubuntu using:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>pd i ubuntu</code></pre>
+        </div>
+        <p>Once installation is complete, start Ubuntu:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>pd sh ubuntu</code></pre>
+        </div>
+        <p>Now you're inside Ubuntu. Next, you can proceed with the VS Code Server tutorial below.</p>
+      </div>
+    </div>
+
+    <h1>How to Run VS Code Server on Android</h1>
+    <p>This tutorial guides you through installing and running <strong>code-server</strong> on Android using Termux.</p>
+
+    <div class="step"><h2>Download VS Code Server</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>wget https://github.com/coder/code-server/releases/download/v4.103.1/code-server-4.103.1-linux-arm64.tar.gz</code></pre>
+      </div>
+    </div>
+
+    <div class="step"><h2>Extract the Archive</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>tar -xvf ./code-server-4.103.1-linux-arm64.tar.gz</code></pre>
+      </div>
+    </div>
+
+    <div class="step"><h2>Navigate to the Code-Server Binary</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>cd code-server-4.103.1-linux-arm64
+cd bin</code></pre>
+      </div>
+    </div>
+
+    <div class="step"><h2>Set Your Password</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>export PASSWORD="yourpassword"</code></pre>
+      </div>
+      <p>Replace <code>yourpassword</code> with a strong password of your choice.</p>
+    </div>
+
+    <div class="step"><h2>Run VS Code Server</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>./code-server</code></pre>
+      </div>
+    </div>
+
+    <footer>
+      🚀 Access VS Code Server in your Android browser at <code>http://localhost:8080</code>.
+    </footer>
+
+    <div class="support">
+      <h3>Support Me</h3>
+      <div class="social-links">
+        <a href="https://www.instagram.com/f.r.e.e.c_/" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">Instagram
+        </a>
+        <a href="https://youtube.com/@v5rn?si=pFFWt6zFxWhptpyF" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube">YouTube
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function copyCode(button){
+      const codeElement = button.nextElementSibling.querySelector("code");
+      const code = codeElement.textContent.trim();
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(code).then(()=>showCopied(button))
+        .catch(()=>fallbackCopy(code, button));
+      } else {
+        fallbackCopy(code, button);
+      }
+    }
+    function fallbackCopy(text, button){
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try { document.execCommand("copy"); showCopied(button); } 
+      catch { button.textContent="Error"; }
+      document.body.removeChild(textarea);
+    }
+    function showCopied(button){
+      button.textContent = "Copied!";
+      setTimeout(()=>button.textContent = "Copy", 2000);
+    }
+  </script>
+</body>
+</html>
